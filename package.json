@@ -1,0 +1,16 @@
+{
+  "type": "module",
+  "name": "http-ping",
+  "version": "1.0.0",
+  "description": "",
+  "main": "http-ping.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "undici": "^8.*"
+  }
+}

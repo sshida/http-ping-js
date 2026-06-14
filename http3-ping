@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# vi: sw=2 sts=2 et
+set -euo pipefail
+
+# http server ping
+# http3で一定間隔でHEAD /応答を表示する
+
+readonly URL="https://sshida.com"
+readonly INTERVAL=1
+
+#sessionTicket="/tmp/curl_h3_session.txt"
+#touch "$sessionTicket"
+
+request() {
+  curl \
+    -I -sS \
+    -o /dev/null -w "%{http_code} %{time_total}\n" \
+    --http3 "$URL" \
+    2>&1
+#    --ssl-sessions $sessionTicket
+
+# curl: option --ssl-sessions: the installed libcurl version does not support this
+# snap: curl 8.20.0 2026-06-06 (2406)
+}
+
+echo "HTTP/3 Monitoring with Session Resumption started..."
+export statusCode roundTripTime
+while true; do
+  currentTime=$(date "+%Y-%m-%d %H:%M:%S")
+  if response=$(request); then
+    read statusCode roundTripTime <<<$response
+    echo "$currentTime: $statusCode $roundTripTime"
+  else
+    read line<<<$response
+    echo -e "$currentTime: \e[31;1m$line\e[m"
+  fi
+    
+  sleep "$INTERVAL"
+done
